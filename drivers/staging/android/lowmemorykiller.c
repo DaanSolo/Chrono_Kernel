@@ -91,7 +91,6 @@ enum pageout_io {
 
 #endif /* CONFIG_ZRAM_FOR_ANDROID */
 
-static struct task_struct *lowmem_deathpending;
 static unsigned long lowmem_deathpending_timeout;
 
 #define lowmem_print(level, x...)			\
@@ -100,21 +99,20 @@ static unsigned long lowmem_deathpending_timeout;
 			printk(x);			\
 	} while (0)
 
-static int
-task_notify_func(struct notifier_block *self, unsigned long val, void *data);
-
-static struct notifier_block task_nb = {
-	.notifier_call	= task_notify_func,
-};
-
-static int
-task_notify_func(struct notifier_block *self, unsigned long val, void *data)
+static int test_task_flag(struct task_struct *p, int flag)
 {
-	struct task_struct *task = data;
+	struct task_struct *t = p;
 
-	if (task == lowmem_deathpending)
-		lowmem_deathpending = NULL;
-	return NOTIFY_OK;
+	do {
+		task_lock(t);
+		if (test_tsk_thread_flag(t, flag)) {
+			task_unlock(t);
+			return 1;
+		}
+		task_unlock(t);
+	} while_each_thread(p, t);
+
+	return 0;
 }
 
 static DEFINE_MUTEX(scan_mutex);
@@ -187,20 +185,15 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 		if (test_task_flag(tsk, TIF_MM_RELEASED))
 			continue;
 
-		/*
-		 * If we already have a death outstanding, then
-		 * bail out right away; indicating to vmscan
-		 * that we have nothing further to offer on
-		 * this pass.
-		 *
-		 */
-		if (lowmem_deathpending &&
-		    time_before_eq(jiffies, lowmem_deathpending_timeout))
-			rcu_read_unlock();
-			/* give the system time to free up the memory */
-			msleep_interruptible(20);
-			mutex_unlock(&scan_mutex);
-			return 0;
+		if (time_before_eq(jiffies, lowmem_deathpending_timeout)) {
+			if (test_task_flag(tsk, TIF_MEMDIE)) {
+				rcu_read_unlock();
+				/* give the system time to free up the memory */
+				msleep_interruptible(20);
+				mutex_unlock(&scan_mutex);
+				return 0;
+			}
+		}
 
 		p = find_lock_task_mm(tsk);
 		if (!p)
@@ -233,9 +226,9 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 		lowmem_print(1, "send sigkill to %d (%s), adj %d, size %d\n",
 			     selected->pid, selected->comm,
 			     selected_oom_adj, selected_tasksize);
-		lowmem_deathpending = selected;
 		lowmem_deathpending_timeout = jiffies + HZ;
 		send_sig(SIGKILL, selected, 0);
+		set_tsk_thread_flag(selected, TIF_MEMDIE);
 		rem -= selected_tasksize;
 		rcu_read_unlock();
 		/* give the system time to free up the memory */
@@ -452,7 +445,6 @@ static int __init lowmem_init(void)
 	unsigned int low_wmark = 0;
 #endif
 
-	task_free_register(&task_nb);
 	register_shrinker(&lowmem_shrinker);
 
 #ifdef CONFIG_ZRAM_FOR_ANDROID
@@ -488,7 +480,6 @@ static int __init lowmem_init(void)
 static void __exit lowmem_exit(void)
 {
 	unregister_shrinker(&lowmem_shrinker);
-	task_free_unregister(&task_nb);
 }
 
 module_param_named(cost, lowmem_shrinker.seeks, int, S_IRUGO | S_IWUSR);
