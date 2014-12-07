@@ -158,25 +158,11 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 	int other_file = global_page_state(NR_FILE_PAGES) -
 						global_page_state(NR_SHMEM);
 
-	/*
-	 * If we already have a death outstanding, then
-	 * bail out right away; indicating to vmscan
-	 * that we have nothing further to offer on
-	 * this pass.
-	 *
-	 */
-#ifdef ENHANCED_LMK_ROUTINE
-	for (i = 0; i < LOWMEM_DEATHPENDING_DEPTH; i++) {
-		if (lowmem_deathpending[i] &&
-			time_before_eq(jiffies, lowmem_deathpending_timeout))
-			return 0;
-	}
-#else
-	if (lowmem_deathpending &&
-	    time_before_eq(jiffies, lowmem_deathpending_timeout))
-		return 0;
-#endif
+<<<<<<< HEAD
 
+
+=======
+>>>>>>> 5f9699f... android/lowmemorykiller: move deathpending check
 	if (lowmem_adj_size < array_size)
 		array_size = lowmem_adj_size;
 	if (lowmem_minfree_size < array_size)
@@ -219,6 +205,25 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 
 		if (tsk->flags & PF_KTHREAD)
 			continue;
+
+		/*
+		 * If we already have a death outstanding, then
+		 * bail out right away; indicating to vmscan
+		 * that we have nothing further to offer on
+		 * this pass.
+		 *
+		 */
+#ifdef ENHANCED_LMK_ROUTINE
+		for (i = 0; i < LOWMEM_DEATHPENDING_DEPTH; i++) {
+			if (lowmem_deathpending[i] &&
+				time_before_eq(jiffies, lowmem_deathpending_timeout))
+				return 0;
+		}
+#else
+		if (lowmem_deathpending &&
+		    time_before_eq(jiffies, lowmem_deathpending_timeout))
+			return 0;
+#endif
 
 		p = find_lock_task_mm(tsk);
 		if (!p)
