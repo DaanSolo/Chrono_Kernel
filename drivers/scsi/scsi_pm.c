@@ -6,7 +6,11 @@
  */
 
 #include <linux/pm_runtime.h>
+<<<<<<< HEAD
 #include <linux/async.h>
+=======
+#include <linux/export.h>
+>>>>>>> 32aaeff... Merge branch 'modsplit-Oct31_2011' of git://git.kernel.org/pub/scm/linux/kernel/git/paulg/linux
 
 #include <scsi/scsi.h>
 #include <scsi/scsi_device.h>

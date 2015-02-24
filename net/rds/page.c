@@ -32,6 +32,11 @@
  */
 #include <linux/highmem.h>
 #include <linux/gfp.h>
+<<<<<<< HEAD
+=======
+#include <linux/cpu.h>
+#include <linux/export.h>
+>>>>>>> 32aaeff... Merge branch 'modsplit-Oct31_2011' of git://git.kernel.org/pub/scm/linux/kernel/git/paulg/linux
 
 #include "rds.h"
 

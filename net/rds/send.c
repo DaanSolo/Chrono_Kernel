@@ -31,10 +31,16 @@
  *
  */
 #include <linux/kernel.h>
+#include <linux/moduleparam.h>
 #include <linux/gfp.h>
 #include <net/sock.h>
 #include <linux/in.h>
 #include <linux/list.h>
+<<<<<<< HEAD
+=======
+#include <linux/ratelimit.h>
+#include <linux/export.h>
+>>>>>>> 32aaeff... Merge branch 'modsplit-Oct31_2011' of git://git.kernel.org/pub/scm/linux/kernel/git/paulg/linux
 
 #include "rds.h"
 

@@ -1,4 +1,9 @@
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+#include <linux/of.h>
+>>>>>>> 32aaeff... Merge branch 'modsplit-Oct31_2011' of git://git.kernel.org/pub/scm/linux/kernel/git/paulg/linux
 #include <linux/of_pci.h>
 #include <linux/of_irq.h>
 #include <asm/prom.h>

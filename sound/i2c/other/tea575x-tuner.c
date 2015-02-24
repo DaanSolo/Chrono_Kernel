@@ -22,7 +22,11 @@
 
 #include <asm/io.h>
 #include <linux/delay.h>
+<<<<<<< HEAD
 #include <linux/interrupt.h>
+=======
+#include <linux/module.h>
+>>>>>>> 32aaeff... Merge branch 'modsplit-Oct31_2011' of git://git.kernel.org/pub/scm/linux/kernel/git/paulg/linux
 #include <linux/init.h>
 #include <linux/slab.h>
 #include <linux/version.h>

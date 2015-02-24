@@ -61,6 +61,7 @@
 #include <asm/atomic.h>
 #include <linux/bitmap.h>
 #include <linux/slab.h>
+#include <linux/export.h>
 
 #include "wusbhc.h"
 #include "wa-hc.h"

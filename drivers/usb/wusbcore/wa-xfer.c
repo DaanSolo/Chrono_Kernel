@@ -83,6 +83,11 @@
 #include <linux/spinlock.h>
 #include <linux/slab.h>
 #include <linux/hash.h>
+<<<<<<< HEAD
+=======
+#include <linux/ratelimit.h>
+#include <linux/export.h>
+>>>>>>> 32aaeff... Merge branch 'modsplit-Oct31_2011' of git://git.kernel.org/pub/scm/linux/kernel/git/paulg/linux
 
 #include "wa-hc.h"
 #include "wusbhc.h"

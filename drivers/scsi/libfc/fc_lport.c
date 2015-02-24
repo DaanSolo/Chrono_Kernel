@@ -88,6 +88,11 @@
  */
 
 #include <linux/timer.h>
+<<<<<<< HEAD
+=======
+#include <linux/delay.h>
+#include <linux/module.h>
+>>>>>>> 32aaeff... Merge branch 'modsplit-Oct31_2011' of git://git.kernel.org/pub/scm/linux/kernel/git/paulg/linux
 #include <linux/slab.h>
 #include <asm/unaligned.h>
 

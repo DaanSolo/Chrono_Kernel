@@ -21,6 +21,12 @@
 
 #include <linux/clk.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
+=======
+#include <linux/mfd/twl6040.h>
+#include <linux/module.h>
+
+>>>>>>> 32aaeff... Merge branch 'modsplit-Oct31_2011' of git://git.kernel.org/pub/scm/linux/kernel/git/paulg/linux
 #include <sound/core.h>
 #include <sound/pcm.h>
 #include <sound/soc.h>
