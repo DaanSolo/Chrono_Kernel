@@ -19,6 +19,7 @@
 #include <linux/poll.h>
 #include <linux/miscdevice.h>
 #include <linux/hid.h>
+#include <linux/module.h>
 
 
 MODULE_AUTHOR("Daniel McDowell <mcdowell@broadcom.com>");

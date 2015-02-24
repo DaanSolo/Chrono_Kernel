@@ -113,6 +113,7 @@
  */
 
 #include <linux/kernel.h>
+#include <linux/export.h>
 #include <linux/module.h>
 #include <linux/device.h>
 #include <linux/stat.h>

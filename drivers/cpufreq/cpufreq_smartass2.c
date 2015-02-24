@@ -29,6 +29,7 @@
     #include <linux/sched.h>
     #include <linux/tick.h>
     #include <linux/timer.h>
+    #include <linux/module.h>
     #include <linux/workqueue.h>
     #include <linux/moduleparam.h>
     #include <asm/cputime.h>

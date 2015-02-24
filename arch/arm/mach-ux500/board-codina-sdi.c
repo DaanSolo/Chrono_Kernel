@@ -7,6 +7,7 @@
  */
 
 #include <linux/kernel.h>
+#include <linux/export.h>
 #include <linux/gpio.h>
 #include <linux/amba/bus.h>
 #include <linux/amba/mmci.h>

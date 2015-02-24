@@ -18,6 +18,7 @@
 #include <linux/dmaengine.h>
 #include <linux/dma-mapping.h>
 #include <linux/slab.h>
+#include <linux/module.h>
 #include <linux/workqueue.h>
 
 #include <plat/ste_dma40.h>

@@ -20,11 +20,7 @@
 #include <linux/nfs_mount.h>
 #include <linux/nfs_page.h>
 #include <linux/backing-dev.h>
-<<<<<<< HEAD
-#include <linux/module.h>
-=======
 #include <linux/export.h>
->>>>>>> 32aaeff... Merge branch 'modsplit-Oct31_2011' of git://git.kernel.org/pub/scm/linux/kernel/git/paulg/linux
 
 #include <asm/uaccess.h>
 

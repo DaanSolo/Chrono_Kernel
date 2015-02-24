@@ -12,6 +12,7 @@
 #include <linux/cpu.h>
 #include <linux/hardirq.h>
 #include <linux/kernel.h>
+#include <linux/export.h>
 #include <linux/notifier.h>
 #include <linux/signal.h>
 #include <linux/sched.h>

@@ -15,6 +15,7 @@
 #include <linux/slab.h>
 #include <linux/bitops.h>
 #include <linux/platform_device.h>
+#include <linux/module.h>
 
 #include <mach/hardware.h>
 #include <mach/msp.h>

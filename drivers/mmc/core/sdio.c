@@ -9,6 +9,7 @@
  * your option) any later version.
  */
 
+#include <linux/export.h>
 #include <linux/err.h>
 #include <linux/pm_runtime.h>
 

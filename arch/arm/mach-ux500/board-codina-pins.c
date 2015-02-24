@@ -5,6 +5,7 @@
  */
 
 #include <linux/kernel.h>
+#include <linux/export.h>
 #include <linux/init.h>
 #include <linux/gpio.h>
 #include <linux/device.h>

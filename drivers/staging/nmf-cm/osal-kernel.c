@@ -11,6 +11,8 @@
 
 #include <linux/interrupt.h>
 #include <linux/io.h>
+#include <linux/stat.h>
+#include <linux/moduleparam.h>
 #include <linux/kthread.h>
 #include <linux/mm.h>
 #include <linux/semaphore.h>

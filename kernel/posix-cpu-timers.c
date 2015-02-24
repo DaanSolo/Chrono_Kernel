@@ -4,6 +4,7 @@
 
 #include <linux/sched.h>
 #include <linux/posix-timers.h>
+#include <linux/export.h>
 #include <linux/errno.h>
 #include <linux/math64.h>
 #include <asm/uaccess.h>

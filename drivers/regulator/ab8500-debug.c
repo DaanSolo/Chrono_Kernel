@@ -12,6 +12,7 @@
 #include <linux/debugfs.h>
 #include <linux/platform_device.h>
 #include <linux/kobject.h>
+#include <linux/module.h>
 #include <linux/slab.h>
 #include <linux/mfd/abx500.h>
 #include <linux/mfd/ab8500.h>

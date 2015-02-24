@@ -16,6 +16,8 @@
 #include <asm/mach/time.h>
 #include <linux/android_alarm.h>
 #include <linux/device.h>
+#include <linux/stat.h>
+#include <linux/module.h>
 #include <linux/miscdevice.h>
 #include <linux/fs.h>
 #include <linux/platform_device.h>

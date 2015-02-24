@@ -17,6 +17,7 @@
 #include <linux/notifier.h>
 #include <linux/clk.h>
 #include <linux/err.h>
+#include <linux/export.h>
 
 #include <plat/gpio-nomadik.h>
 
