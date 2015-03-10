@@ -564,8 +564,10 @@ all: vmlinux
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS	+= -Os
 else
-KBUILD_CFLAGS	+= -O2
+KBUILD_CFLAGS	+= -O3
 endif
+
+KBUILD_CFLAGS += -funroll-loops -mthumb -march=armv7-a -mtune=cortex-a9
 
 include $(srctree)/arch/$(SRCARCH)/Makefile
 
