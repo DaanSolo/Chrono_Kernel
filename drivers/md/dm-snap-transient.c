@@ -10,6 +10,7 @@
 #include <linux/mm.h>
 #include <linux/pagemap.h>
 #include <linux/vmalloc.h>
+#include <linux/module.h>
 #include <linux/slab.h>
 #include <linux/dm-io.h>
 
