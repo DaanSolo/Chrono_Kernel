@@ -1228,6 +1228,7 @@ static struct lcdclk_prop lcdclk_prop[] = {
 
 static int lcdclk_usr = DEFAULT;
 static unsigned int custom_lcdclk = 49920000;
+static unsigned int current_cldclk_freq = 49920000;
 
 static void lcdclk_thread(struct work_struct *ws2401_lcdclk_work)
 {
@@ -1239,6 +1240,7 @@ static void lcdclk_thread(struct work_struct *ws2401_lcdclk_work)
 		case CUSTOM:
 			pr_err("[MCDE] LCDCLK %dHz\n", custom_lcdclk);
 			LCDCLK_SET(custom_lcdclk);
+			current_cldclk_freq = custom_lcdclk;
 			break;
 		case DEFAULT:
 			if (is_s6d())
@@ -1248,10 +1250,12 @@ static void lcdclk_thread(struct work_struct *ws2401_lcdclk_work)
 
 			pr_err("[MCDE] LCDCLK %dHz\n", lcdclk_prop[idx].clk);
 			LCDCLK_SET(lcdclk_prop[idx].clk);
+			current_cldclk_freq = lcdclk_prop[idx].clk;
 			break;
 		default:		
 			pr_err("[MCDE] LCDCLK %dHz\n", lcdclk_prop[lcdclk_usr].clk);
 			LCDCLK_SET(lcdclk_prop[lcdclk_usr].clk);
+			current_cldclk_freq = lcdclk_prop[lcdclk_usr].clk;
 	}
 
 }
@@ -1419,12 +1423,10 @@ static int update_channel_static_registers(struct mcde_chnl_state *chnl)
 		
 		if (port->phy.dpi.lcd_freq != clk_round_rate(chnl->clk_dpi,
 						port->phy.dpi.lcd_freq))
-			dev_warn(&mcde_dev->dev, "Could not set lcd freq"
-				" to %d\n", port->phy.dpi.lcd_freq);
+			dev_warn(&mcde_dev->dev, "Could not set lcd freq to %d\n", current_cldclk_freq);
 					
-		WARN_ON_ONCE(clk_set_rate(chnl->clk_dpi,
-					port->phy.dpi.lcd_freq));
-		pr_err("[MCDE] rebased LCDCLK to %d Hz\n", port->phy.dpi.lcd_freq);
+		WARN_ON_ONCE(clk_set_rate(chnl->clk_dpi, current_cldclk_freq));
+		pr_err("[MCDE] rebased LCDCLK to %d Hz\n", current_cldclk_freq);
 		
 		WARN_ON_ONCE(clk_enable(chnl->clk_dpi));
 	}
