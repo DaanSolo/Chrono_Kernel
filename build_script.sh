@@ -34,7 +34,7 @@ inst(){
     if [ "$1" == "codina" ] ; then
         ln $BUILD/../osfiles_install_codina.sh $BUILD/../osfiles/osfiles_install.sh
     fi
-	
+    
     if [ "$1" == "codinap" ] ; then
         ln $BUILD/../osfiles_install_codinap.sh $BUILD/../osfiles/osfiles_install.sh
     fi
@@ -51,7 +51,7 @@ inst(){
 $BUILD/../ramdisk/modules/autoload/cpufreq_interactive.ko
     #mv -f $BUILD/../system/lib/modules/cpufreq_dynamic.ko $BUILD/../ramdisk/modules/autoload/cpufreq_dynamic.ko
     mv -f $BUILD/../system/lib/modules/cpufreq_zenx.ko $BUILD/../ramdisk/modules/autoload/cpufreq_zenx.ko
-    #mv -f $BUILD/../system/lib/modules/zcache.ko $BUILD/../ramdisk/modules/autoload/zcache.ko
+    mv -f $BUILD/../system/lib/modules/zcache.ko $BUILD/../ramdisk/modules/autoload/zcache.ko
     mv -f $BUILD/../system/lib/modules/cpufreq_ondemandplus.ko 
 $BUILD/../ramdisk/modules/autoload/cpufreq_ondemandplus.ko
     mv -f $BUILD/../system/lib/modules/logger.ko $BUILD/../system/lib/modules/autoload/logger.ko
@@ -75,12 +75,17 @@ $BUILD/../ramdisk/modules/autoload/cpufreq_ondemandplus.ko
 
 upload() {
     if [ "$1" == "codinap" ] ; then
-        $BUILD/../../uploader.py $PASS $KERNEL_NAME /XDA-files/ChronoMonochrome/kernel/codinap
+        $BUILD/../../uploader.py $PASS $BUILD/../$KERNEL_NAME /XDA-files/ChronoMonochrome/kernel/codinap
     fi
-	
+    
     if [ "$1" == "codina" ] ; then
-        $BUILD/../../uploader.py $PASS $KERNEL_NAME /XDA-files/ChronoMonochrome/kernel/codina
+        if [ "$2" == "debug" ] ; then
+            $BUILD/../../uploader.py $PASS $BUILD/../$KERNEL_NAME /XDA-files/ChronoMonochrome/misc
+        else
+            $BUILD/../../uploader.py $PASS $BUILD/../$KERNEL_NAME /XDA-files/ChronoMonochrome/kernel/codina  
+        fi
     fi
+    
 }
 
 compile config
