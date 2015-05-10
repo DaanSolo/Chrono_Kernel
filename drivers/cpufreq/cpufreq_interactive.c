@@ -134,7 +134,7 @@ static spinlock_t timer_slack_lock;
 static int *timer_slack_vals = default_timer_slack_val;
 static int ntimer_slack_vals = ARRAY_SIZE(default_timer_slack_val);
 
-static bool io_is_busy = true;
+static bool io_is_busy = false;
 
 /*
  * If the max load among other CPUs is higher than up_threshold_any_cpu_load
