@@ -246,8 +246,8 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 
 HOSTCC       = gcc
 HOSTCXX      = g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -Ofast -fno-tree-vectorize  -fomit-frame-pointer -pipe
-HOSTCXXFLAGS = -Ofast -fno-tree-vectorize -pipe
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
+HOSTCXXFLAGS = -O2
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -366,51 +366,12 @@ LINUXINCLUDE    := -I$(srctree)/arch/$(hdr-arch)/include \
 KBUILD_CPPFLAGS := -D__KERNEL__
 
 KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
-		   -fno-strict-aliasing \
-                   -fno-common \
+		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
-		   -funsafe-math-optimizations \
-		   -fno-tree-vectorize \
-                   -pipe \
-                   -marm \
-		   -march=armv7-a \
-		   -mtune=cortex-a9 \
-		   -mfloat-abi=softfp \
-		   -mfpu=neon-fp16 \
-		   -mvectorize-with-neon-quad \
-		   -DNDEBUG \
-		   -fsection-anchors \
-		   -funsafe-loop-optimizations \
-		   -fivopts \
-		   -fuse-linker-plugin \
-		   -ffat-lto-objects \
-		   -fuse-ld=gold \
-		   -funroll-loops \
-		   -funswitch-loops \
-		   -frename-registers \
-		   -fgcse-sm \
-		   -fgcse-las \
-		   -fgcse-after-reload \
-		   -fdevirtualize-speculatively \
-		   -fira-region=all \
-                   -fsched-pressure \
-		   -fsched-spec-load \
- 		   -fsched-spec-load-dangerous \
-		   -fweb \
-		   -ftracer \
-		   -fipa-pta \
-                   -fno-check-data-deps \
-		   -fmodulo-sched \
-		   -fmodulo-sched-allow-regmoves \
-                   -ffunction-sections \
-                   -fdata-sections \
-                   -Wno-error=unused-parameter \
-                   -Wno-error=unused-but-set-variable \
-                   -Wno-error=maybe-uninitialized \
-		   -fno-keep-static-consts \
-		   -fmerge-all-constants 
-
+		   -fno-delete-null-pointer-checks \
+		   -mfpu=neon -funsafe-math-optimizations \
+		   -ftree-vectorize -pipe
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS   := -D__ASSEMBLY__
@@ -605,8 +566,6 @@ KBUILD_CFLAGS	+= -Os
 else
 KBUILD_CFLAGS	+= -Ofast
 endif
-
-LDFLAGS += -Ofast --as-needed --sort-common
 
 include $(srctree)/arch/$(SRCARCH)/Makefile
 
