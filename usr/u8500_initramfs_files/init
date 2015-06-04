@@ -5,88 +5,61 @@ export PATH=/stage1
 busybox cd /
 busybox date >>boot.txt
 exec >>boot.txt 2>&1
-
 busybox rm init
 busybox mount -t proc proc /proc
 busybox mount -t sysfs sysfs /sys
 
-load_image=/stage1/boot.cpio
-#boot/recovery specific overlay
-extra_image=/mnt/efs/boot.cpio.gz
-extra_dir=/mnt/efs/boot
+busybox mount -t ext4 /dev/block/mmcblk0p17 /ramdisk
 
-#common overlay
-common_dir=/mnt/efs/common
+if ! busybox grep -q bootmode=2 /proc/cmdline ; then
+
+	for i in /ramdisk/modules/autoload/*.ko
+	do
+		busybox insmod $i
+	done
+	
+	if busybox test -f /ramdisk/00userinit ; then
+		busybox sh /ramdisk/00userinit
+	fi
+fi
+
+busybox chmod 644 /ramdisk/boot.cpio
+
+load_image=/ramdisk/boot.cpio
+lvm=/ramdisk/lvm.cpio
 
 if busybox grep -q bootmode=2 /proc/cmdline ; then
 	# recovery boot
-	load_image=/stage1/recovery.cpio
-	extra_image=/mnt/efs/recovery.cpio.gz
-	extra_dir=/mnt/efs/recovery
+	busybox chmod 644 /ramdisk/recovery.cpio
+	load_image=/ramdisk/recovery.cpio
+	# since it's pain, load j4fs and param from separate partition
+	busybox insmod /ramdisk/modules/j4fs.ko
+	busybox insmod /ramdisk/modules/param.ko
+	busybox insmod /ramdisk/modules/exfat.ko
+
+	busybox mount -t j4fs /dev/block/mmcblk0p1 /mnt/.lfs
+	busybox sh /ramdisk/00recovery
 fi
 
-busybox cpio -i < ${load_image}
-
-# install lvm files and apply overlay if it exists
-if busybox test -f /stage1/lvm.cpio ; then
-	busybox cpio -i < /stage1/lvm.cpio
+if busybox test -f ${load_image} ; then
+	busybox cpio -i < ${load_image}
 fi
 
-busybox mount -t ext4 /dev/block/mmcblk0p7 /mnt/efs
-
-# LEGACY BEGIN
-
-#DON'T USE THESE IF POSSIBLE - use dirs below
-# apply ramdisk overlay from /efs partition
-if busybox test -f ${extra_image} ; then
-	busybox zcat ${extra_image} | busybox cpio -i -u
-fi
-if busybox test -f /mnt/efs/lvm.cpio.gz ; then
-	busybox zcat /mnt/efs/lvm.cpio.gz | busybox cpio -i -u
+if busybox test -f ${load_image}.gz ; then
+	busybox zcat ${load_image}.gz | busybox cpio -i -u
 fi
 
-# LEGACY END
+if busybox test -f ${lvm} ; then
+	busybox cpio -i < ${lwm}
+fi
 
-echo -n > /init.overlay.rc
-chmod 644 /init.overlay.rc
-
-# safety measure to prevent common includes to damage /init.rc and prevent phone from booting
-cp /init.rc /stage1/
-[ -d $common_dir ] && load_dir $common_dir
-cp -f /stage1/init.rc /
-
-[ -d $extra_dir ] && load_dir $extra_dir
-
-# safety measure to prevent common includes to damage /init.rc and prevent phone from booting
-cp -f /init.rc /stage1/
-[ -d $common_dir/overlay ] && cp -af $common_dir/overlay/* /
-cp -f /stage1/init.rc /
-
-[ -d $extra_dir/overlay ] && cp -af $extra_dir/overlay/* /
-
-cp /init.rc /stage1/init.rc
-
-cat > /init.rc << _EOF
-#monkey-patched by stage1 init script
-import /init.kernel.rc
-import /init.overlay.rc
-import /init.extra.rc
-#monkey-patch end
-
-_EOF
-cat /stage1/init.rc >> /init.rc
-
-for m in /modules/*.ko; do
-	insmod $m
-done
-
-busybox test -f /stage1/extra.sh && busybox sh /stage1/extra.sh
-
-busybox umount /mnt/efs
+if busybox test -f ${lvm}.gz ; then
+	busybox zcat ${lvm}.gz | busybox cpio -i -u
+fi
 
 busybox umount /sys
 busybox umount /proc
 busybox date >>boot.txt
-busybox rm -fr /stage1 /dev/* /modules
+busybox rm -fr /stage1 /dev/*
 export PATH="${_PATH}"
 exec /init
