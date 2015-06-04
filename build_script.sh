@@ -17,7 +17,7 @@ compile(){
     
     make O=$BUILD \
     ARCH=arm \
-    CROSS_COMPILE="/home/chrono/kernel_build/arm-cortex_a9-linux-gnueabihf-linaro_4.9.3-2015.03/bin/arm-cortex_a9-linux-gnueabihf-" \
+    CROSS_COMPILE="/home/chrono/kernel_build/arm-eabi-5.1/bin/arm-eabi-" \
     -j5 -k
 }
 send() {
@@ -60,7 +60,16 @@ inst(){
     fi
     cd ..
     rm $KERNEL_NAME
-    zip -r -9 $KERNEL_NAME META-INF system ramdisk genfstab osfiles recovery boot.img tmp
+    if [ "$2" == "light" ] ; then 
+        zip -r -9 $KERNEL_NAME META-INF system ramdisk boot.img tmp
+    else
+        if [ "$2" == "light2" ] ; then
+             zip -r -9 $KERNEL_NAME META-INF system ramdisk genfstab boot.img tmp
+        else
+             zip -r -9 $KERNEL_NAME META-INF system ramdisk genfstab osfiles recovery boot.img tmp
+        fi
+    fi
+
     cd $SOURCE
     #send
     #sudo shutdown -h now
