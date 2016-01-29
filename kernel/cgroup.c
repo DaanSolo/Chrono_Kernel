@@ -76,6 +76,9 @@ static struct cgroup_subsys *subsys[CGROUP_SUBSYS_COUNT] = {
 
 #define MAX_CGROUP_ROOT_NAMELEN 64
 
+/* Android system server */
+#define AID_SYSTEM        KUIDT_INIT(1000)
+
 /*
  * A cgroupfs_root represents the root of a cgroup hierarchy,
  * and may be associated with a superblock to form an active
@@ -2263,6 +2266,7 @@ static int attach_task_by_pid(struct cgroup *cgrp, u64 pid, bool threadgroup)
 		 */
 		tcred = __task_cred(tsk);
 		if (cred->euid &&
+		    cred->euid != AID_SYSTEM &&
 		    cred->euid != tcred->uid &&
 		    cred->euid != tcred->suid) {
 			/*
